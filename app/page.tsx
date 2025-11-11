@@ -49,7 +49,6 @@ export default function ShopPage() {
 
             {/* Iskalno polje */}
             <div className="relative flex-1 max-w-md">
-              <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Poišči oblačilo..."
@@ -89,7 +88,7 @@ export default function ShopPage() {
                   onClick={() => setShowFilters(false)}
                   className="text-gray-500 text-2xl"
                 >
-                  ×
+                  x
                 </button>
               </div>
 
