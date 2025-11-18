@@ -1,127 +1,83 @@
-'use client';
+import { getProducts } from "@/lib/getProducts";
 
-import Link from 'next/link';
-import { useState } from 'react';
+interface Product {
+  _id: string;
+  name: string;
+  price: number;
+  imageUrl?: string;
+  description?: string;
+}
 
-// Preproste SVG-ikone (namesto lucide-react)
-const SearchIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-  </svg>
-);
+export default async function HomePage() {
+  const products = await getProducts();
 
-const FilterIcon = () => (
-  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-          d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-  </svg>
-);
-
-export default function ShopPage() {
-  const [showFilters, setShowFilters] = useState(false);
+  if (!products || products.length === 0) {
+    return (
+      <main className="min-h-screen bg-gray-50 py-12 px-4">
+        <div className="max-w-7xl mx-auto text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Naši izdelki</h1>
+          <p className="text-lg text-gray-600">Trenutno ni na voljo nobenega izdelka.</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-4xl sm:text-5xl font-bold text-center text-gray-900 mb-12">
+          Naši izdelki
+        </h1>
 
-      {/* Hero */}
-      <section className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-20">
-        <div className="container mx-auto px-6 text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Naša ponudba</h1>
-          <p className="text-lg max-w-2xl mx-auto">
-            Odkrijte širok izbor oblačil za moške, ženske in otroke. Kakovost in stil na enem mestu.
-          </p>
-        </div>
-      </section>
-
-      <div className="container mx-auto px-6 py-12">
-
-        {/* Gornja vrstica – iskanje + gumb za filtre */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-          <div className="flex items-center gap-4 w-full sm:w-auto">
-            {/* Mobilni gumb za filtre */}
-            <button
-              onClick={() => setShowFilters(true)}
-              className="lg:hidden flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow hover:shadow-md transition"
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {products.map((product: Product) => (
+            <div
+              key={product._id}
+              className="bg-white rounded-xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden group cursor-pointer transform hover:-translate-y-2"
             >
-              <FilterIcon /> Filtri
-            </button>
+              {/* Slika z navadnim <img> – deluje brez next.config.js */}
+              {product.imageUrl ? (
+                <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                  <img
+                    src={`${product.imageUrl}?w=800&h=800&fit=crop&auto=format`}
+                    alt={product.name}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    loading="lazy" // dodan lazy loading za boljšo učinkovitost
+                  />
+                  <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-20 transition-opacity duration-300" />
+                </div>
+              ) : (
+                <div className="bg-gray-200 border-2 border-dashed rounded-t-xl w-full aspect-square flex items-center justify-center">
+                  <span className="text-gray-500 text-lg font-medium">Brez slike</span>
+                </div>
+              )}
 
-            {/* Iskalno polje */}
-            <div className="relative flex-1 max-w-md">
-              <input
-                type="text"
-                placeholder="Poišči oblačilo..."
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              />
+              {/* Vsebina kartice */}
+              <div className="p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
+                  {product.name}
+                </h2>
+
+                {product.description && (
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    {product.description}
+                  </p>
+                )}
+
+                <div className="flex items-center justify-between mt-4">
+                  <span className="text-3xl font-bold text-indigo-600">
+                    {product.price.toFixed(2)} €
+                  </span>
+
+                  <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm">
+                    V košarico
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
-
-          {/* Desktop gumb za filtre */}
-          <button
-            onClick={() => setShowFilters(true)}
-            className="hidden lg:flex items-center gap-2 bg-white px-4 py-2 rounded-md shadow hover:shadow-md transition"
-          >
-            <FilterIcon /> Filtri
-          </button>
+          ))}
         </div>
-
-        {/* Glavni del – placeholder za izdelke */}
-        <div className="text-center py-20">
-          <div className="bg-gray-200 border-2 border-dashed rounded-xl w-full h-96 flex items-center justify-center">
-            <p className="text-2xl text-gray-500">Izdelki se bodo prikazali tukaj</p>
-          </div>
-          <p className="mt-6 text-gray-600">
-            Uporabite iskalno vrstico ali filtre, da poiščete želene izdelke.
-          </p>
-        </div>
-
-        {/* Mobilni filtri (popup) */}
-        {showFilters && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end justify-center lg:hidden">
-            <aside className="bg-white w-full max-w-md p-6 rounded-t-xl animate-slide-up">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold flex items-center gap-2">
-                  <FilterIcon /> Filtri
-                </h3>
-                <button
-                  onClick={() => setShowFilters(false)}
-                  className="text-gray-500 text-2xl"
-                >
-                  x
-                </button>
-              </div>
-
-              {/* Primer filtrov – lahko jih razširiš kasneje */}
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Kategorija</label>
-                  <select className="w-full px-3 py-2 border rounded-md">
-                    <option>Vsi</option>
-                    <option>Moški</option>
-                    <option>Ženske</option>
-                    <option>Otroci</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Cena</label>
-                  <input type="range" min="0" max="200" className="w-full" />
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>0 €</span>
-                    <span>200 €</span>
-                  </div>
-                </div>
-              </div>
-
-              <button className="mt-6 w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700 transition">
-                Uporabi filtre
-              </button>
-            </aside>
-          </div>
-        )}
-
       </div>
-    </div>
+    </main>
   );
 }
