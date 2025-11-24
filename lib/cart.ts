@@ -24,9 +24,7 @@ export async function addToCart(product: any, quantity = 1) {
     name: product.name,
     price: product.price,
     quantity,
-    imageUrl: product.mainImage
-      ? urlFor(product.mainImage).width(300).url()!
-      : '/placeholder.jpg',
+    imageUrl: product.imageUrl || '/placeholder.jpg',
   }
 
   // GLAVNA SPREMEMBA: uporabi createIfNotExists + upsert

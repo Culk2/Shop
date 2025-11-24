@@ -34,9 +34,12 @@ export default async function CartPage() {
                     <div className="w-48 h-48 flex-shrink-0 bg-gray-100 overflow-hidden">
                       {item.imageUrl ? (
                         <img
-                          src={`${item.imageUrl}?w=600&h=600&fit=crop&auto=format`}
-                          alt={item.name}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                        src={item.imageUrl 
+                            ? `${item.imageUrl}?w=600&h=600&fit=crop&auto=format`
+                            : '/placeholder.jpg'
+                        }
+                        alt={item.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         />
                       ) : (
                         <div className="w-full h-full bg-gray-200 border-2 border-dashed flex items-center justify-center">
