@@ -1,8 +1,9 @@
-// app/cart/page.tsx
+
 import { getCart } from '@/lib/cart'
 import { SignedIn, SignedOut } from '@clerk/nextjs'
 import Link from 'next/link'
 import { ShoppingBag, Trash2 } from 'lucide-react'
+import { removeFromCart } from '@/app/actions/removeFromCart'
 
 export default async function CartPage() {
   const cart = await getCart()
@@ -60,9 +61,18 @@ export default async function CartPage() {
                           Količina: <strong className="text-gray-900">{item.quantity}</strong>
                         </span>
 
-                        <button className="text-gray-400 hover:text-red-600 transition">
-                          <Trash2 className="w-6 h-6" />
-                        </button>
+                        <form action={async () => {
+                                'use server'
+                                await removeFromCart(item._key)
+                            }}>
+                                <button
+                                type="submit"
+                                className="text-gray-400 hover:text-red-600 hover:bg-red-50 p-3 rounded-lg transition-all"
+                                title="Odstrani iz košarice"
+                                >
+                                <Trash2 className="w-6 h-6" />
+                                </button>
+                            </form>
                       </div>
 
                       <div className="mt-4 pt-4 border-t border-gray-200 text-right">
