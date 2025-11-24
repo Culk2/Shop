@@ -15,7 +15,7 @@ export default async function CartPage() {
           <div>
             {cart.items.map((item: any) => (
               <div key={item._key} className="flex gap-4 border-b py-4">
-                <img src={urlFor(item.image).width(100).url()} alt="" />
+                <img src={item.imageUrl} alt={item.name} className="..." />
                 <div>
                   <h3>{item.name}</h3>
                   <p>{item.quantity} × {item.price} €</p>

@@ -2,6 +2,7 @@
 // lib/cart.ts
 import { createClient } from '@sanity/client'
 import { currentUser } from '@clerk/nextjs/server'
+import { urlFor } from '@/sanity/lib/image'
 
 const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
@@ -23,7 +24,9 @@ export async function addToCart(product: any, quantity = 1) {
     name: product.name,
     price: product.price,
     quantity,
-    image: product.mainImage,
+    imageUrl: product.mainImage
+      ? urlFor(product.mainImage).width(300).url()!
+      : '/placeholder.jpg',
   }
 
   // GLAVNA SPREMEMBA: uporabi createIfNotExists + upsert

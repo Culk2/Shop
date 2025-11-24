@@ -23,7 +23,7 @@ export default {
             { name: 'name', type: 'string', title: 'Ime' },
             { name: 'price', type: 'number', title: 'Cena' },
             { name: 'quantity', type: 'number', title: 'Količina', validation: (Rule: any) => Rule.min(1) },
-            { name: 'image', type: 'image', title: 'Slika' },
+            { name: 'imageUrl', type: 'string', title: 'Image URL' }
           ],
           preview: {
             select: {
