@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { ShoppingBag, Search } from 'lucide-react';
 import Image from 'next/image';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 
 export default function Header() {
   const cartCount = 3;
@@ -55,6 +56,18 @@ export default function Header() {
                 </span>
               )}
             </Link>
+
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+                  Vstopi
+                </button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+
           </div>
         </div>
       </div>
