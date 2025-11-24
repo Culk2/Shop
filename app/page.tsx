@@ -1,4 +1,6 @@
 import { getProducts } from "@/lib/getProducts";
+import { addToCartAction } from './actions/cart';
+import { SignedIn, SignedOut } from '@clerk/nextjs';
 
 interface Product {
   _id: string;
@@ -69,9 +71,15 @@ export default async function HomePage() {
                     {product.price.toFixed(2)} €
                   </span>
 
-                  <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium text-sm">
-                    V košarico
-                  </button>
+                  
+                  <form action={addToCartAction}>
+                    {/* Pošljemo celo produkt kot JSON string v hidden input */}
+                    <input type="hidden" name="product" value={JSON.stringify(product)} />
+
+                    <button className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700">
+                      Dodaj v košarico
+                    </button>
+                  </form>
                 </div>
               </div>
             </div>
