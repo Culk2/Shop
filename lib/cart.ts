@@ -1,4 +1,5 @@
 // app/lib/cart.ts
+// lib/cart.ts
 import { createClient } from '@sanity/client'
 import { currentUser } from '@clerk/nextjs/server'
 
@@ -6,42 +7,45 @@ const client = createClient({
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET!,
   apiVersion: '2024-01-01',
-  useCdn: false, // za pisanje mora biti false
-  token: process.env.SANITY_WRITE_TOKEN, // dodaj ta token v Vercel (read+write)
+  useCdn: false,
+  token: process.env.SANITY_WRITE_TOKEN!, // mora biti write token!
 })
 
-// Dodaj/posodobi izdelek v košarici (server action)
 export async function addToCart(product: any, quantity = 1) {
   const user = await currentUser()
-  if (!user) {
-    // Neprijavljen → uporabi localStorage (kasneje)
-    return false
+  if (!user) return false
+
+  const cartItem = {
+    _key: product._id + '-' + Date.now(), // edinstven key
+    _type: 'object',
+    productId: product._id,
+    slug: typeof product.slug === 'string' ? product.slug : product.slug?.current,
+    name: product.name,
+    price: product.price,
+    quantity,
+    image: product.mainImage,
   }
 
-  const cartDoc = {
-    _type: 'cart',
-    userId: user.id,
-    items: [
-      {
-        _key: product._id,
-        productId: product._id,
-        slug: product.slug.current,
-        name: product.name,
-        price: product.price,
-        quantity,
-        image: product.mainImage,
-      },
-    ],
+  // GLAVNA SPREMEMBA: uporabi createIfNotExists + upsert
+  try {
+    await client
+      .patch(user.id)
+      .setIfMissing({ items: [] })
+      .append('items', [cartItem])
+      .commit()
+  } catch (error: any) {
+    if (error.message.includes('not found') || error.statusCode === 404) {
+      await client.create({
+        _id: user.id,
+        _type: 'cart',
+        userId: user.id,
+        items: [cartItem],
+      })
+    } else {
+      console.error('Napaka pri dodajanju v košarico:', error)
+      throw error
+    }
   }
-
-  // Če košarica že obstaja → patch, sicer createIfNotExists
-  await client
-    .patch(user.id)
-    .setIfMissing({ items: [] })
-    .append('items', cartDoc.items)
-    .commit()
-
-  return true
 }
 
 // Pridobi košarico za trenutnega uporabnika
