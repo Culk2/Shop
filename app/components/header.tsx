@@ -26,9 +26,6 @@ export default function Header() {
             <Link href="/" className="text-gray-700 hover:text-indigo-600 font-medium text-lg transition">
               Domov
             </Link>
-            <Link href="/shop" className="text-gray-700 hover:text-indigo-600 font-medium text-lg transition">
-              Trgovina
-            </Link>
             <Link href="/shop?category=moški" className="text-gray-700 hover:text-indigo-600 font-medium text-lg transition">
               Moški
             </Link>
