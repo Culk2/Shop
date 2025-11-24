@@ -1,6 +1,6 @@
 
 import { getCart } from '@/lib/cart'
-import { SignedIn, SignedOut } from '@clerk/nextjs'
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
 import Link from 'next/link'
 import { ShoppingBag, Trash2 } from 'lucide-react'
 import { removeFromCart } from '@/app/actions/removeFromCart'
@@ -119,7 +119,7 @@ export default async function CartPage() {
 
                   <div className="mt-6 text-center">
                     <Link
-                      href="/shop"
+                      href="/"
                       className="text-indigo-600 hover:underline font-medium text-sm"
                     >
                       ← Nadaljuj z nakupovanjem
@@ -134,7 +134,7 @@ export default async function CartPage() {
               <h2 className="text-3xl font-bold text-gray-700 mb-4">Košarica je prazna</h2>
               <p className="text-gray-600 mb-8">Dodaj izdelke iz trgovine</p>
               <Link
-                href="/shop"
+                href="/"
                 className="inline-block bg-indigo-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-indigo-700 transition"
               >
                 Pojdi v trgovino
@@ -143,23 +143,19 @@ export default async function CartPage() {
           )}
         </SignedIn>
 
+
         <SignedOut>
-          <div className="text-center py-20">
-            <ShoppingBag className="w-32 h-32 text-gray-300 mx-auto mb-8" />
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Prijavi se in shrani svojo košarico
-            </h2>
-            <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-              Ko se prijaviš, bo tvoja košarica na voljo na vseh napravah.
-            </p>
-            <Link
-              href="/sign-in"
-              className="inline-block bg-indigo-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-indigo-700 transition"
-            >
-              Prijava / Registracija
-            </Link>
-          </div>
+            <SignInButton mode="modal">
+            <button className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition">
+                Prijava
+            </button>
+            </SignInButton>
         </SignedOut>
+         <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+        </SignedIn>
+
+
       </div>
     </main>
   )
