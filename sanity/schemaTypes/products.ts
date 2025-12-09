@@ -21,5 +21,6 @@ export default defineType({
       type: "image",
       title: "Image",
     }),
+
   ],
 });

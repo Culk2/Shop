@@ -1,7 +1,12 @@
+// lib/getProducts.ts   ← NOVO IME DATOTEKE, ČISTO NA NOVO
 import { client } from "../sanity/lib/client";
-import { allProductsQuery } from "./queries";
 
 export async function getProducts() {
-  const products = await client.fetch(allProductsQuery);
-  return products;
+  return await client.fetch(`*[_type == "product"] {
+    _id,
+    name,
+    price,
+    "imageUrl": image.asset->url,
+    "slug": slug.current
+  }`);
 }
