@@ -48,17 +48,7 @@ export default function ProductCard({ product }: { product: Product }) {
           </div>
         </div>
       </button>
-
-      {/* GUMB DODAJ V KOŠARICO }
-      <div className="px-6 pb-6 mt-4">
-        <form action={addToCartAction} className="w-full">
-          <input type="hidden" name="product" value={JSON.stringify(product)} />
-          <button className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition font-medium">
-            Dodaj v košarico
-          </button>
-        </form>
-      </div>
-*/}
+      
       {/* MODAL */}
       {showModal && (
         <div 

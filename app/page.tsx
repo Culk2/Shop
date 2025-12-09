@@ -1,7 +1,13 @@
 // app/page.tsx (ali app/shop/page.tsx)
 import { getProducts } from "@/lib/getProducts";
-import { addToCartAction } from './actions/cart';
 import ProductCard from './components/ProductCard'; // nova client komponenta
+
+interface Product {
+  _id: string;
+  name: string;
+  price: number;
+  imageUrl?: string | null;
+}
 
 export default async function HomePage() {
   const products = await getProducts();
@@ -25,7 +31,7 @@ export default async function HomePage() {
         </h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {products.map((product) => (
+          {products.map((product: Product) => (
             <ProductCard key={product._id} product={product} />
           ))}
         </div>
